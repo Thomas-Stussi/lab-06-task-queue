@@ -1,14 +1,9 @@
-const app = require('./lib/app');
-const pool = require('./lib/utils/pool');
+const express = require('express');
+const app = express();
+const { UI, setQueues } = require('bull-board');
+const { taskQueue } = require('./lib/queue');
 
-const PORT = process.env.PORT || 7890;
+setQueues([taskQueue]);
+app.use('/', UI);
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Started on ${PORT}`);
-});
-
-process.on('exit', () => {
-  console.log('Goodbye!');
-  pool.end();
-});
+app.listen(7890);
